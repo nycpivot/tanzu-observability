@@ -121,12 +121,19 @@
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
     </dependency>
+		
+		<!-- open tracing -->
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-cloud-starter</artifactId>
+			<version>0.5.7</version>
+		</dependency>
 	
-	<!-- wavefront -->
-	<dependency>
-	  <groupId>com.wavefront</groupId>
-	  <artifactId>wavefront-spring-boot-starter</artifactId>
-	</dependency>
+		<!-- wavefront -->
+		<dependency>
+			<groupId>com.wavefront</groupId>
+			<artifactId>wavefront-spring-boot-starter</artifactId>
+		</dependency>
   </dependencies>
   
 	<dependencyManagement>
