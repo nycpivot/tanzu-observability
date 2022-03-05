@@ -34,6 +34,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 
 /**
  * @author Juergen Hoeller
@@ -49,6 +52,8 @@ class OwnerController {
 	private final OwnerRepository owners;
 
 	private final VisitRepository visits;
+
+	private final Tracer tracer = GlobalTracer.get();
 
 	public OwnerController(OwnerRepository clinicService, VisitRepository visits) {
 		this.owners = clinicService;
@@ -95,6 +100,11 @@ class OwnerController {
 
 		// find owners by last name
 		String lastName = owner.getLastName();
+
+		// WAVEFRONT DEMO
+		Span span = tracer.buildSpan("Loading Last Name " + lastName).start();
+		span.finish();
+
 		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);
 		if (ownersResults.isEmpty()) {
 			// no owners found
