@@ -25,6 +25,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 
 /**
  * @author Juergen Hoeller
@@ -36,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 class VetController {
 
 	private final VetRepository vets;
+	private final Tracer tracer = GlobalTracer.get();
 
 	public VetController(VetRepository clinicService) {
 		this.vets = clinicService;
@@ -43,6 +47,12 @@ class VetController {
 
 	@GetMapping("/vets.html")
 	public String showVetList(@RequestParam(defaultValue = "1") int page, Model model) {
+
+		// WAVEFRONT DEMO
+		Span span = tracer.buildSpan("showVetList").start();
+		span.setTag("Page #", page);
+		span.finish();
+
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
 		// objects so it is simpler for Object-Xml mapping
 		Vets vets = new Vets();
