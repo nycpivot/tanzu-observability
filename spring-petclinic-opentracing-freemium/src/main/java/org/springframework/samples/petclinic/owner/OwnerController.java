@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.wavefront.java_sdk.com.google.common.collect.ImmutableMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -101,8 +102,10 @@ class OwnerController {
 		// find owners by last name
 		String lastName = owner.getLastName();
 
-		// WAVEFRONT DEMO
-		Span span = tracer.buildSpan("Loading Last Name " + lastName).start();
+		// *** WAVEFRONT DEMO *** //
+		Span span = tracer.buildSpan("processFindForm").start();
+		span.setTag("Page #", page);
+		span.log(ImmutableMap.of("event", "owner", "Id", owner.getId(), "FirstName", owner.getFirstName(), "LastName", owner.getLastName()));
 		span.finish();
 
 		Page<Owner> ownersResults = findPaginatedForOwnersLastName(page, lastName);

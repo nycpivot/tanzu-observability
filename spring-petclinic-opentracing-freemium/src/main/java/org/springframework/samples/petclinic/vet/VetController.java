@@ -39,7 +39,7 @@ import io.opentracing.util.GlobalTracer;
 class VetController {
 
 	private final VetRepository vets;
-	private final Tracer tracer = GlobalTracer.get();
+	private final Tracer tracer = GlobalTracer.get(); // returns a WavefrontTracer since it's the only Bean imported
 
 	public VetController(VetRepository clinicService) {
 		this.vets = clinicService;
@@ -49,7 +49,8 @@ class VetController {
 	public String showVetList(@RequestParam(defaultValue = "1") int page, Model model) {
 
 		// WAVEFRONT DEMO
-		Span span = tracer.buildSpan("Loading page " + page).start();
+		Span span = tracer.buildSpan("showVetList").start();
+		span.setTag("Page #", page);
 		span.finish();
 
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
