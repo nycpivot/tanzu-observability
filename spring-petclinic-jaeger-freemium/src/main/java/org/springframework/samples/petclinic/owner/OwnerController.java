@@ -104,6 +104,7 @@ class OwnerController {
 		// *** WAVEFRONT DEMO *** //
 		Span span = tracer.buildSpan("processFindForm").start();
 		span.setTag("Page #", page);
+		span.log("Inside processFindForm");
 		//span.log(ImmutableMap.of("event", "owner", "Id", owner.getId(), "FirstName", owner.getFirstName(), "LastName", owner.getLastName()));
 		span.finish();
 

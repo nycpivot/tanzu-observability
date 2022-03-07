@@ -51,6 +51,7 @@ class VetController {
 		// WAVEFRONT DEMO
 		Span span = tracer.buildSpan("showVetList").start();
 		span.setTag("Page #", page);
+		span.log("Inside showVetList");
 		span.finish();
 
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
