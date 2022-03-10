@@ -16,7 +16,9 @@ import com.wavefront.sdk.common.application.ApplicationTags;
 import com.wavefront.sdk.common.clients.WavefrontClientFactory;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public final class Tracing {
   private Tracing() {
