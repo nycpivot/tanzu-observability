@@ -8,6 +8,13 @@ import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMapAdapter;
 import io.opentracing.tag.Tags;
 
+import com.wavefront.opentracing.WavefrontTracer;
+import com.wavefront.opentracing.reporting.Reporter;
+import com.wavefront.opentracing.reporting.WavefrontSpanReporter;
+import com.wavefront.sdk.common.WavefrontSender;
+import com.wavefront.sdk.common.application.ApplicationTags;
+import com.wavefront.sdk.common.clients.WavefrontClientFactory;
+
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.HashMap;
 
@@ -17,7 +24,25 @@ public final class Tracing {
 
   public static Tracer init(String service) {
     // TODO: Replace this with Wavefront Tracer
-    return NoopTracerFactory.create();
+		 WavefrontClientFactory wavefrontClientFactory = new WavefrontClientFactory();
+     wavefrontClientFactory.addClient("http://localhost:2878/");
+
+     WavefrontSender wavefrontSender = wavefrontClientFactory.getClient();
+		 
+     String applicationName = "beachshirts-nyc";
+     ApplicationTags applicationTags = new ApplicationTags.Builder(applicationName, service).build();
+		 
+     Reporter wfSpanReporter = new WavefrontSpanReporter.Builder()
+			.build(wavefrontSender);
+		 
+     WavefrontTracer.Builder wfTracerBuilder = new WavefrontTracer.
+       Builder(wfSpanReporter, applicationTags);
+						 
+     wfTracerBuilder.redMetricsCustomTagKeys(new HashSet<String>(Arrays.asList("env")));
+		 
+     return wfTracerBuilder.build();
+		 
+    //return NoopTracerFactory.create();
   }
 
   public static Span startServerSpan(Tracer tracer, javax.ws.rs.core.HttpHeaders httpHeaders, String operationName) {
